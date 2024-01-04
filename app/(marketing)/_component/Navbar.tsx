@@ -7,7 +7,7 @@ import { useConvexAuth } from "convex/react";
 import { Spinner } from "@/components/spinner";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 const Navbar = () => {
     const scrolled = useScrollTop();
@@ -37,7 +37,7 @@ const Navbar = () => {
                     <>
                         <Button variant="ghost" size="sm" asChild>
                             <Link href="/documents">
-                                Enter Jotion
+                                Enter Notion
                             </Link>
                         </Button>
                         <UserButton
