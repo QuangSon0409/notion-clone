@@ -7,8 +7,9 @@ import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import Item from "./sidebar-item";
+import { Item } from "./sidebar-item";
 import { toast } from "sonner";
+import DocumentList from "./document-list";
 
 const Navigation = () => {
     const isMobile = useMediaQuery("(max-width: 768px)");
@@ -81,23 +82,7 @@ const Navigation = () => {
             setTimeout(() => setIsResetting(false), 300);
         }
     }
-    // const resetWidth = () => {
-    //     if (sidebarRef.current && navbarRef.current) {
-    //         setIsCollapsed(false);
-    //         setIsResetting(true);
 
-    //         sidebarRef.current.style.width = isMobile ? "100%" : "240px";
-    //         navbarRef.current.style.setProperty(
-    //             "width",
-    //             isMobile ? "0" : "calc(100% - 240px)"
-    //         );
-    //         navbarRef.current.style.setProperty(
-    //             "left",
-    //             isMobile ? "100%" : "240px"
-    //         );
-    //         setTimeout(() => setIsResetting(false), 300);
-    //     }
-    // };
     const handleCreate = () => {
         const promise = create({ title: "United" });
         toast.promise(promise, {
@@ -138,13 +123,7 @@ const Navigation = () => {
                 <Item title="New Page" onClick={handleCreate} icon={PlusCircle} />
             </div>
             <div className="mt-4">
-                {documents?.map((document) => {
-                    return <>
-                        <p key={document._id}>
-                            {document.title}
-                        </p>
-                    </>
-                })}
+                <DocumentList />
             </div>
             <div onMouseDown={handleMouseDown} onClick={resetWidth} className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0" />
 
@@ -165,5 +144,6 @@ const Navigation = () => {
         </div>
     </>);
 }
+
 
 export default Navigation;

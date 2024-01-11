@@ -5,6 +5,28 @@ import { mutation, query } from "./_generated/server";
 
 import { Doc, Id } from "./_generated/dataModel";
 
+export const getSidebar = query({
+    args: {
+        parentDocument: v.optional(v.id("documents"))
+    },
+    handler: async (ctx, arg) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("not authenticated");
+        }
+        const userId = identity.subject;
+        const documents = await ctx.db.query("documents").withIndex("by_user_parent", (q) =>
+            q.eq("userId", userId)
+                .eq("parentDocument", arg.parentDocument)
+        ).filter((q) => q.eq(q.field("isArchived"), false))
+            .order("desc")
+            .collect()
+
+        return documents
+    }
+
+})
+
 export const get = query({
     handler: async (ctx) => {
         const identity = await ctx.auth.getUserIdentity();

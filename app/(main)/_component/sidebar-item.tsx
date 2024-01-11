@@ -1,5 +1,6 @@
 // import React from 'react'
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronRightIcon, LucideIcon } from "lucide-react";
@@ -16,8 +17,14 @@ interface ItemProps {
     onClick: () => void;
     icon: LucideIcon;
 }
-const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSearch, onExpand, active, documentIcon }: ItemProps) => {
+export const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSearch, onExpand, active, documentIcon }: ItemProps) => {
     const ChevronIcon = expanded ? ChevronDown : ChevronRightIcon;
+
+    const handleExpand = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        event.stopPropagation();
+        onExpand?.()
+
+    }
     return (
         <div
             onClick={onClick}
@@ -27,7 +34,7 @@ const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSearch, o
         >
             {!!id && (
                 <>
-                    <div role="button" className="h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-500 mr-1" onClick={() => { }}>
+                    <div role="button" className="h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-500 mr-1" onClick={handleExpand}>
                         <ChevronIcon className="w-4 h-4 shrink-0 text-muted-foreground/50" />
                     </div>
                 </>
@@ -58,4 +65,17 @@ const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSearch, o
     )
 }
 
-export default Item
+Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
+    return (
+        <div
+            style={{
+                paddingLeft: level ? `${(level * 12) + 25}px` : "12px"
+            }}
+            className="flex gap-x-2 py-[3px]"
+        >
+            <Skeleton className="h-4 w-4" />
+            <Skeleton className="h-4 w-[30%]" />
+        </div>
+    )
+}
+
