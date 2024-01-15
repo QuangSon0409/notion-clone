@@ -1,9 +1,12 @@
 // import React from 'react'
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRightIcon, LucideIcon } from "lucide-react";
+import { useMutation } from "convex/react";
+import { ChevronDown, ChevronRightIcon, LucideIcon, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 interface ItemProps {
     id?: Id<"documents">,
@@ -23,6 +26,19 @@ export const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSe
     const handleExpand = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         event.stopPropagation();
         onExpand?.()
+
+    }
+    const create = useMutation(api.document.create)
+    const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!id) return;
+
+        const promise = create({ title: "Untitled", parentDocument: id });
+        toast.promise(promise, {
+            loading: "Create a new note ...",
+            success: "New note created",
+            error: "Fail to create a new note"
+
+        })
 
     }
     return (
@@ -60,6 +76,14 @@ export const Item = ({ title, onClick, icon: Icon, id, level = 0, expanded, isSe
                 </kbd>
 
             </>)}
+            {!!id && (
+                <div className="ml-auto flex items-center gap-x2" role="button" onClick={onCreate}>
+
+                    <div className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-md hover:bg-neutral-300 dark:hover:bg-neutral-500">
+                        <Plus className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                </div>
+            )}
 
         </div>
     )
